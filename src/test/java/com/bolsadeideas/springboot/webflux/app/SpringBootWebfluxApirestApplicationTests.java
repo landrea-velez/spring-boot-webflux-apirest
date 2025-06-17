@@ -92,8 +92,7 @@ public class SpringBootWebfluxApirestApplicationTests {
 	}
 	
 	@Test
-	public void crear2Test() {
-		
+	public void crear2Test() {		
 		Categoria categoria = service.findCategoriaByNombre("Muebles").block();
 		
 		Producto producto = new Producto("Mesa comedor", 100.00, categoria);
@@ -112,6 +111,45 @@ public class SpringBootWebfluxApirestApplicationTests {
 			Assertions.assertThat(p.getNombre()).isEqualTo("Mesa comedor");
 			Assertions.assertThat(p.getCategoria().getNombre()).isEqualTo("Muebles");
 		});
+	}
+	
+	@Test
+	public void editarTest() {		
+		Producto producto = service.findByNombre("Sony Notebook").block();
+		Categoria categoria = service.findCategoriaByNombre("Electrónico").block();
+		
+		Producto productoEditado = new Producto("Asus Notebook", 700.00, categoria);
+		
+		client.put().uri("/api/v2/productos/{id}", Collections.singletonMap("id", producto.getId()))
+		.contentType(MediaType.APPLICATION_JSON_UTF8)
+		.accept(MediaType.APPLICATION_JSON_UTF8)
+		.body(Mono.just(productoEditado), Producto.class)
+		.exchange()
+		.expectStatus().isCreated()
+		.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+		.expectBody()
+		.jsonPath("$.id").isNotEmpty()
+		.jsonPath("$.nombre").isEqualTo("Asus Notebook")
+		.jsonPath("$.categoria.nombre").isEqualTo("Electrónico");
+		
+	}
+	
+	@Test
+	public void eliminarTest() {
+		Producto producto = service.findByNombre("Mica Cómoda 5 Cajones").block();
+		client.delete()
+		.uri("/api/v2/productos/{id}", Collections.singletonMap("id", producto.getId()))
+		.exchange()
+		.expectStatus().isNoContent()
+		.expectBody()
+		.isEmpty();
+		
+		client.get()
+		.uri("/api/v2/productos/{id}", Collections.singletonMap("id", producto.getId()))
+		.exchange()
+		.expectStatus().isNotFound()
+		.expectBody()
+		.isEmpty();
 	}
 
 }
