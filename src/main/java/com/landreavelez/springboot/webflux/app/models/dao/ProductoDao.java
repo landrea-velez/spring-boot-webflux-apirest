@@ -5,11 +5,10 @@ import com.landreavelez.springboot.webflux.app.models.documents.Producto;
 import org.springframework.data.mongodb.repository.Query;
 import reactor.core.publisher.Mono;
 
+public interface ProductoDao extends ReactiveMongoRepository<Producto, String> {
 
-public interface ProductoDao extends ReactiveMongoRepository<Producto, String>{
-	
-public Mono<Producto> findByNombre(String nombre);
-	
+	public Mono<Producto> findByNombre(String nombre);
+
 	@Query("{ 'nombre': ?0 }")
 	public Mono<Producto> obtenerPorNombre(String nombre);
 
