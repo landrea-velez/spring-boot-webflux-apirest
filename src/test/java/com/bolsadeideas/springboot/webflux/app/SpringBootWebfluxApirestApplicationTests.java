@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,8 +25,9 @@ import reactor.core.publisher.Mono;
 import org.springframework.http.MediaType;
 
 
+@AutoConfigureWebTestClient
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class SpringBootWebfluxApirestApplicationTests {
 	
 	@Autowired
@@ -38,7 +40,8 @@ public class SpringBootWebfluxApirestApplicationTests {
 	private String url;
 
 	@Test
-	public void listarTest() {		
+	public void listarTest() {
+		
 		client.get()
 		.uri(url)
 		.accept(MediaType.APPLICATION_JSON_UTF8)
@@ -58,7 +61,8 @@ public class SpringBootWebfluxApirestApplicationTests {
 	}
 	
 	@Test
-	public void verTest() {		
+	public void verTest() {
+		
 		Producto producto = service.findByNombre("TV Panasonic Pantalla LCD").block();
 		
 		client.get()
@@ -80,7 +84,8 @@ public class SpringBootWebfluxApirestApplicationTests {
 	}
 	
 	@Test
-	public void crearTest() {		
+	public void crearTest() {
+		
 		Categoria categoria = service.findCategoriaByNombre("Muebles").block();
 		
 		Producto producto = new Producto("Mesa comedor", 100.00, categoria);
@@ -99,7 +104,8 @@ public class SpringBootWebfluxApirestApplicationTests {
 	}
 
 	@Test
-	public void crear2Test() {		
+	public void crear2Test() {
+		
 		Categoria categoria = service.findCategoriaByNombre("Muebles").block();
 		
 		Producto producto = new Producto("Mesa comedor", 100.00, categoria);
@@ -122,7 +128,8 @@ public class SpringBootWebfluxApirestApplicationTests {
 	}
 	
 	@Test
-	public void editarTest() {		
+	public void editarTest() {
+		
 		Producto producto = service.findByNombre("Sony Notebook").block();
 		Categoria categoria = service.findCategoriaByNombre("Electrónico").block();
 		
