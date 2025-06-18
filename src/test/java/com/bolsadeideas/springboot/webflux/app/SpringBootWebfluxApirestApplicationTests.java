@@ -142,7 +142,7 @@ public class SpringBootWebfluxApirestApplicationTests {
 		.exchange()
 		.expectStatus().isNoContent()
 		.expectBody()
-		.isEmpty();
+		.isEmpty(); 
 		
 		client.get()
 		.uri("/api/v2/productos/{id}", Collections.singletonMap("id", producto.getId()))
